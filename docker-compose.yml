@@ -1,0 +1,40 @@
+services:
+  xAquality:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Docker image repository names must be lowercase.
+    image: xaquality:latest
+    restart: unless-stopped
+
+    # The reference service is reached through Traefik on the shared server
+    # network rather than publishing a host port directly.
+    expose:
+      - "7860"
+
+    networks:
+      - proxy-network
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy-network"
+
+      - "traefik.http.routers.${SERVICE_NAME:-xAquality}.rule=Host(`${SERVICE_DOMAIN:-balalab-skku.org}`) && PathPrefix(`/${SERVICE_NAME:-xAquality}`)"
+      - "traefik.http.routers.${SERVICE_NAME:-xAquality}.entrypoints=web"
+      - "traefik.http.routers.${SERVICE_NAME:-xAquality}.priority=100"
+      - "traefik.http.routers.${SERVICE_NAME:-xAquality}.service=${SERVICE_NAME:-xAquality}"
+
+      - "traefik.http.middlewares.${SERVICE_NAME:-xAquality}-slash.redirectregex.regex=^https?://([^/]+)/${SERVICE_NAME:-xAquality}$"
+      - "traefik.http.middlewares.${SERVICE_NAME:-xAquality}-slash.redirectregex.replacement=https://$${1}/${SERVICE_NAME:-xAquality}/"
+      - "traefik.http.middlewares.${SERVICE_NAME:-xAquality}-slash.redirectregex.permanent=true"
+
+      - "traefik.http.middlewares.${SERVICE_NAME:-xAquality}-strip.stripprefix.prefixes=/${SERVICE_NAME:-xAquality}"
+      - "traefik.http.routers.${SERVICE_NAME:-xAquality}.middlewares=${SERVICE_NAME:-xAquality}-slash,${SERVICE_NAME:-xAquality}-strip"
+
+      - "traefik.http.services.${SERVICE_NAME:-xAquality}.loadbalancer.server.port=7860"
+
+networks:
+  proxy-network:
+    external: true
+    name: proxy-network

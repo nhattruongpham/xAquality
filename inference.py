@@ -95,6 +95,7 @@ def main():
         df_processed = pd.DataFrame(processed_cols)[FEATURES]
 
         preds = predict(df_processed, model, scaler)
+        preds = predict(df, model, scaler)
         df["Predicted_VN_WQI"] = preds
 
         print("\nBatch Prediction Results:")

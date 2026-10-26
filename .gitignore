@@ -216,3 +216,26 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Python and local runtime files
+__pycache__/
+*.py[cod]
+*.log
+.python-version
+.venv/
+venv/
+env/
+
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*credentials*
+*secret*
+
+# Generated or potentially user-provided data
+predictions.csv
+
+# Nested copy of the project/repository; the root project is canonical.
+xAquality/

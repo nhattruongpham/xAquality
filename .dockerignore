@@ -1,0 +1,19 @@
+.git
+.gitignore
+.github
+.agents
+.codex
+__pycache__/
+*.py[cod]
+*.log
+predictions.csv
+*.csv
+env.md
+upload_to_hf.py
+
+# The repository contains a nested copy of the project; the root copy is used.
+xAquality/
+
+# Keep the runtime image focused on the application and its model assets.
+Dockerfile*
+docker-compose*.yml
